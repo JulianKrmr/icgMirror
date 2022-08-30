@@ -1,6 +1,7 @@
 import Vector from "./vector";
 import Ray from "./ray";
 import Intersection from "./intersection";
+import Plane from "./plane";
 
 /**
  * Class representing an axis aligned box
@@ -52,7 +53,23 @@ export default class AABox {
    * @return The intersection if there is one, null if there is none
    */
   intersect(ray: Ray): Intersection | null {
+    for (let i = 0; i < this.indices.length; i += 4) {
+      const a = this.vertices[this.indices[i]];
+      const b = this.vertices[this.indices[i + 1]];
+      const c = this.vertices[this.indices[i + 2]];
+      const d = this.vertices[this.indices[i + 3]];
+
+      //create a plane from the 3 vertices of the box
+      const plane = new Plane(a, b, c);
+      //calculate the intersection of the ray with the plane
+      const intersection = plane.intersect(ray);
+
+      const vertices = [a, b, c, d];
+      // if the intersection is not null and is inside the box, return it
+      if (intersection && plane.isInside(vertices, intersection.point)) {
+        return intersection;
+      }
+    }
     return null;
-    // TODO
   }
 }
