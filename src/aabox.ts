@@ -53,6 +53,8 @@ export default class AABox {
    * @return The intersection if there is one, null if there is none
    */
   intersect(ray: Ray): Intersection | null {
+    let intersectionMin = null;
+    let intersectionTMin = Infinity;
     for (let i = 0; i < this.indices.length; i += 4) {
       const a = this.vertices[this.indices[i]];
       const b = this.vertices[this.indices[i + 1]];
@@ -66,10 +68,15 @@ export default class AABox {
 
       const vertices = [a, b, c, d];
       // if the intersection is not null and is inside the box, return it
-      if (intersection && plane.isInside(vertices, intersection.point)) {
-        return intersection;
+      if (
+        intersection &&
+        plane.isInside(vertices, intersection.point) &&
+        intersection.t < intersectionTMin
+      ) {
+        intersectionMin = intersection;
+        intersectionTMin = intersection.t;
       }
     }
-    return null;
+    return intersectionMin;
   }
 }
