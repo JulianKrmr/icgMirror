@@ -21,6 +21,7 @@ for (let exercise of [
   "perspective",
   "animation",
   "quaternion",
+  "project"
 ]) {
   if (
     fs.existsSync(path.resolve(__dirname, `src/${exercise}-boilerplate.ts`))
