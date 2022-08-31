@@ -25,13 +25,8 @@ export default function phong(
   //reflect function: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/reflect.xhtml
   const lightColor = new Vector(0.8, 0.8, 0.8, 0);
   const kA = phongValues.kA;
-  console.log(phongValues.kA);
-
   const kD = phongValues.kD;
-  console.log(phongValues.kD);
-
   const kS = phongValues.kS;
-  console.log(phongValues.kS);
 
   color = new Vector(color.r, color.g, color.b, 1);
 
