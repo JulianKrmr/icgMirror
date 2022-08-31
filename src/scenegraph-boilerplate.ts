@@ -7,13 +7,16 @@ import {
 } from './nodes';
 import RayVisitor from './rayvisitor';
 import { Rotation, Scaling, Translation } from './transformation';
+import {FirstTraversalVisitorRay} from "./firstTraversalVisitorRay";
+import phong from "./phong";
+import Matrix from "./matrix";
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById("raytracer") as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
 
     const sg = new GroupNode(new Translation(new Vector(0, 0, -5, 0)));
-    const gnRotation = new Rotation(new Vector(1, 0, 0, 0), 0)
+    const gnRotation = new Rotation(new Vector(0, 1, 0, 0), 0)
     const gn = new GroupNode(gnRotation);
     sg.add(gn);
     const gn1 = new GroupNode(new Translation(new Vector(1.2, .5, 0, 0)));
@@ -31,7 +34,14 @@ window.addEventListener('load', () => {
         origin: new Vector(0, 0, 0, 1),
         width: canvas.width,
         height: canvas.height,
-        alpha: Math.PI / 3
+        alpha: Math.PI / 3,
+        toWorld: Matrix.identity()
+    }
+    const phongValues = {
+        shininess: 16.0,
+        kA: 0.5,
+        kD: 0.9,
+        kS: 0.6
     }
 
     const visitor = new RayVisitor(ctx, canvas.width, canvas.height);
@@ -51,8 +61,9 @@ window.addEventListener('load', () => {
         lastTimestamp = timestamp;
         gnRotation.angle = animationTime / 2000;
 
-        visitor.render(sg, camera, lightPositions);
-        // animationHandle = window.requestAnimationFrame(animate);
+
+        visitor.render(sg, camera, lightPositions, phongValues, null);
+        animationHandle = window.requestAnimationFrame(animate);
     }
 
     function startAnimation() {

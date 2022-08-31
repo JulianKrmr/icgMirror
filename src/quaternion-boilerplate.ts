@@ -20,6 +20,7 @@ import textureVertexShader from './texture-vertex-perspective-shader.glsl';
 import textureFragmentShader from './texture-fragment-shader.glsl';
 import { SQT } from './transformation';
 import Quaternion from './quaternion';
+import {FirstTraversalVisitorRaster} from "./firstTraversalVisitorRaster";
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById("rasteriser") as HTMLCanvasElement;
@@ -27,7 +28,7 @@ window.addEventListener('load', () => {
 
     // construct scene graph
     const sg = new GroupNode(new SQT(new Vector(1, 1, 1, 0), { angle: 0.6, axis: new Vector(0, 1, 0, 0) }, new Vector(0, 0, 0, 0)));
-    const cube = new TextureBoxNode('hci-logo.png');
+    const cube = new TextureBoxNode('hci-logo.png', 'brickwall_normal.jpg');
     sg.add(cube);
 
     // setup for rendering
@@ -52,6 +53,15 @@ window.addEventListener('load', () => {
         textureVertexShader,
         textureFragmentShader
     );
+
+    const phongValues = {
+        shininess: 16.0,
+        kA: 0.3,
+        kD: 0.6,
+        kS: 0.7
+    }
+    const firstTraversalVisitorRaster = new FirstTraversalVisitorRaster();
+
     const visitor = new RasterVisitor(gl, phongShader, textureShader, setupVisitor.objects);
 
     let animationNodes = [
@@ -71,7 +81,7 @@ window.addEventListener('load', () => {
 
     function animate(timestamp: number) {
         simulate(timestamp - lastTimestamp);
-        visitor.render(sg, camera, []);
+        visitor.render(sg, camera, [], phongValues, firstTraversalVisitorRaster);
         lastTimestamp = timestamp;
         window.requestAnimationFrame(animate);
     }

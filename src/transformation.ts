@@ -5,6 +5,7 @@ import Quaternion from './quaternion';
 export interface Transformation {
     getMatrix(): Matrix;
     getInverseMatrix(): Matrix;
+    toJSON(): any;
 }
 
 class MatrixTransformation implements Transformation {
@@ -23,11 +24,42 @@ class MatrixTransformation implements Transformation {
     getInverseMatrix(): Matrix {
         return this.inverse;
     }
+
+    toJSON(): any {
+        let result;
+
+        if (this instanceof Translation) {
+            result = {
+                "Translation": {
+                    "matrix": this.matrix.toJSON(),
+                    "inverse": this.inverse.toJSON()
+                }
+            }
+        }
+        else if (this instanceof Rotation) {
+            result = {
+                "Rotation": {
+                    "matrix": this.matrix.toJSON(),
+                    "inverse": this.inverse.toJSON()
+                }
+            }
+        }
+        else if (this instanceof Scaling) {
+            result = {
+                "Scaling": {
+                    "matrix": this.matrix.toJSON(),
+                    "inverse": this.inverse.toJSON()
+                }
+            }
+        }
+        return result;
+    }
 }
 
 export class Translation extends MatrixTransformation {
-    constructor(translation: Vector) {
-        super(Matrix.translation(translation), Matrix.translation(translation.mul(-1)));
+    constructor(translation?: Vector, matrix?: Matrix, inverse?: Matrix) {
+        if (translation) super(Matrix.translation(translation), Matrix.translation(translation.mul(-1)));
+        else if (matrix && inverse) super(matrix, inverse);
     }
 }
 
@@ -35,10 +67,13 @@ export class Rotation extends MatrixTransformation {
     private _axis: Vector;
     private _angle: number;
 
-    constructor(axis: Vector, angle: number) {
-        super(Matrix.rotation(axis, angle), Matrix.rotation(axis, -angle));
-        this._axis = axis;
-        this._angle = angle;
+    constructor(axis?: Vector, angle?: number, matrix?: Matrix, inverse?: Matrix) {
+        if (axis && angle) {
+            super(Matrix.rotation(axis, angle), Matrix.rotation(axis, -angle));
+            this._axis = axis;
+            this._angle = angle;
+        }
+        else if (matrix && inverse) super(matrix, inverse);
     }
 
     set axis(axis: Vector) {
@@ -58,8 +93,9 @@ export class Rotation extends MatrixTransformation {
 }
 
 export class Scaling extends MatrixTransformation {
-    constructor(scale: Vector) {
-        super(Matrix.scaling(scale), Matrix.scaling(new Vector(1 / scale.x, 1 / scale.y, 1 / scale.z, 0)));
+    constructor(scale?: Vector, matrix?: Matrix, inverse?: Matrix) {
+        if (scale) super(Matrix.scaling(scale), Matrix.scaling(new Vector(1 / scale.x, 1 / scale.y, 1 / scale.z, 0)));
+        else if (matrix && inverse) super(matrix, inverse);
     }
 }
 

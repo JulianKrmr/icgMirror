@@ -14,12 +14,18 @@ window.addEventListener('load', () => {
     const lightPositions = [
         new Vector(1, 1, -1, 1)
     ];
-    const shininess = 10;
     const camera = {
         origin: new Vector(0, 0, 0, 1),
         width: canvas.width,
         height: canvas.height,
-        alpha: Math.PI / 3
+        alpha: Math.PI / 3,
+        toWorld: Matrix.identity()
+    }
+    const phongValues = {
+        shininess: 32.0,
+        kA: 0.5,
+        kD: 0.9,
+        kS: 1.0
     }
 
     function setPixel(x: number, y: number, color: Vector) {
@@ -51,7 +57,7 @@ window.addEventListener('load', () => {
                 const ray = Ray.makeRay(x, y, camera);
                 const intersection = sphere.intersect(ray);
                 if (intersection) {
-                    const color = phong(sphere.color, intersection, lightPositions, shininess, camera.origin);
+                    const color = phong(sphere.color, intersection, lightPositions, camera.origin, phongValues);
                     setPixel(x, y, color);
 
                 }

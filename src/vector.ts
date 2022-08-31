@@ -23,7 +23,6 @@
    * @return The x component of the vector
    */
   get x(): number {
-    //return the x component of the vector
     return this.data[0];
   }
 
@@ -32,7 +31,7 @@
    * @param val - The new value
    */
   set x(val: number) {
-    this.x = val;
+    this.data[0] = val;
   }
 
   /**
@@ -64,7 +63,7 @@
    * @param val The new value
    */
   set y(val: number) {
-    this.y = val;
+    this.data[1] = val;
   }
 
   /**
@@ -96,7 +95,7 @@
    * @param val The new value
    */
   set z(val: number) {
-    this.z = val;
+    this.data[2] = val;
   }
 
   /**
@@ -128,7 +127,7 @@
    * @param val The new value
    */
   set w(val: number) {
-    this.w = val;
+    this.data[3] = val;
   }
 
   /**
@@ -153,12 +152,7 @@
    * @return The new vector;
    */
   add(other: Vector): Vector {
-    return new Vector(
-      this.x + other.x,
-      this.y + other.y,
-      this.z + other.z,
-      this.w + other.w
-    );
+    return new Vector(this.x + other.x, this.y + other.y, this.z + other.z, this.w + other.w);
   }
 
   /**
@@ -167,12 +161,7 @@
    * @return The new vector
    */
   sub(other: Vector): Vector {
-    return new Vector(
-      this.x - other.x,
-      this.y - other.y,
-      this.z - other.z,
-      this.w - other.w
-    );
+    return new Vector(this.x - other.x, this.y - other.y, this.z - other.z, this.w - other.w);
   }
 
   /**
@@ -181,12 +170,7 @@
    * @return The new vector
    */
   mul(other: number): Vector {
-    return new Vector(
-      this.x * other,
-      this.y * other,
-      this.z * other,
-      this.w * other
-    );
+    return new Vector(this.x * other, this.y * other, this.z * other, this.w);//evtl. statt this.w -> this.w * other.w
   }
 
   /**
@@ -195,13 +179,7 @@
    * @return The new vector
    */
   div(other: number): Vector {
-    return new Vector(
-      this.x / other,
-      this.y / other,
-      this.z / other,
-      this.w / other
-    );
-    // TODO
+    return new Vector(this.x / other, this.y / other, this.z / other, this.w);
   }
 
   /**
@@ -210,9 +188,7 @@
    * @return The result of the dot product
    */
   dot(other: Vector): number {
-    return (
-      this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w
-    );
+    return this.x * other.x + this.y * other.y + this.z * other.z;
   }
 
   /**
@@ -222,12 +198,7 @@
    * @return The result of the cross product as new Vector
    */
   cross(other: Vector): Vector {
-    return new Vector(
-      this.y * other.z - this.z * other.y,
-      this.z * other.x - this.x * other.z,
-      this.x * other.y - this.y * other.x,
-      0
-    );
+    return new Vector(this.y * other.z - this.z * other.y, this.z * other.x - this.x * other.z, this.x * other.y - this.y * other.x, 0);
   }
 
   /**
@@ -252,12 +223,7 @@
    * @return True if the vectors carry equal numbers. The fourth element may be both equivalent to undefined to still return true.
    */
   equals(other: Vector): boolean {
-    return (
-      Math.abs(this.x - other.x) <= Number.EPSILON &&
-      Math.abs(this.y - other.y) <= Number.EPSILON &&
-      Math.abs(this.z - other.z) <= Number.EPSILON &&
-      Math.abs(this.w - other.w) <= Number.EPSILON
-    );
+    return this.data.every((value, index) => value === other.data[index]);
   }
 
   /**
@@ -265,8 +231,12 @@
    * @return The length of the vector
    */
   get length(): number {
-    return Math.sqrt(
-      this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w
-    ); 
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
+  }
+
+  toJSON() {
+    return {
+      "data": this.data
+    }
   }
 }

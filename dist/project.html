@@ -1,12 +1,124 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desktop</title>
+    <title>Project</title>
+    <script type="text/javascript" src="project.bundle.js"></script>
+    <link rel="icon" type="image/png" href="hci-logo.png">
 </head>
+
 <body>
-    <h1>Here is the Desktop</h1>
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="project.html">
+            <img src="./textures/hci-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            ICG
+        </a>
+        <div class="navbar-brand">Project</div>
+    </div>
+</nav>
+<br>
+
+<div style="margin-left: 100px">
+    <div class="row" style="margin-bottom: 10px; width: 1800px">
+        <div class="col-sm">
+            <div>
+                <div>
+                    <div>
+                        Renderer: &nbsp;<kbd>K</kbd>
+                    </div>
+                    <div style="margin-left: 10px; margin-top: 10px">
+                        <button id="rasterizer_b" type="button" class="btn btn-info">Rasterizer</button>
+                        <button id="raytracer_b" type="button" class="btn btn-outline-info">Raytracer</button>
+                    </div>
+                    <br>
+                    Kamera:
+                    <div style="margin: 5px 10px">
+                        <kbd>W</kbd>&nbsp;<kbd>A</kbd>&nbsp;<kbd>S</kbd>&nbsp;<kbd>D</kbd> drücken, um die Kamera auf ihrer x- und z-Achse zu bewegen. <br>
+                        <kbd>Q</kbd> <kbd>E</kbd> drücken, um die Kamera auf ihrer y-Achse zu bewegen. <br>
+                        <kbd>↑</kbd>&nbsp;<kbd>←</kbd>&nbsp;<kbd>↓</kbd>&nbsp;<kbd>→</kbd> drücken, um den Blickwinkel der
+                        Kamera zu verändern. <br>
+                        <br>
+                        <kbd>C</kbd>&nbsp;drücken, um zur Kamera am untexturierten, rotierenden Würfel zu wechseln, beziehungsweise wieder
+                        zur Free-Flight-Kamera zurückzukehren.
+                    </div>
+                </div>
+                <br>
+                <div>
+                    Scaling-Node:
+                    <div style="margin: 5px 10px">
+                        <kbd>U</kbd> drücken und halten, um die Pyramide bis zu einem Maximalwert hochzuskalieren,
+                        beziehungsweise bis zu einem Minimalwert herunterzuskalieren.
+                    </div>
+                    Jumper-Node:
+                    <div style="margin: 5px 10px">
+                        <kbd>I</kbd> drücken, um die rote Sphäre einmal bis zu einem Maximalwert springen zu lassen.
+                    </div>
+                    <br>
+                    Mausinteraktion:
+                    <div style="margin: 5px 10px">
+                        Klicke auf ein Objekt, um die Farben dieses Objekts zu randomisieren, beziehungsweise die Textur zu wechseln (gilt nicht für den Würfel in dem sich die Objekte befinden).
+                        <br>
+                        Im Raytracer dauert es ein paar Sekunden, bis die Manipulation angezeigt wird.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <figure class="figure col-sm-6">
+                <canvas id="rasteriser" class="figure-img mx-auto d-block rounded" width="350" height="350"
+                        style="position: relative; left: 100px; border: 1px solid #000000"></canvas>
+                <canvas id="raytracer" class="figure-img mx-auto d-block rounded" width="350" height="350"
+                        style="position: relative; left: 100px; border: 1px solid #000000; visibility: hidden; z-index: 0"></canvas>
+            </figure>
+        </div>
+        <div class="col-sm">
+            <b>Phong-Werte:</b>
+            <div class="form-group text-left" style="margin-left: 10px">
+                <div class="form-group text-left">
+                    <label for="kA">kAmbient</label>
+                    <input class="form-control-range" id="kA" type="range" min="0.0" max="1.0" step="0.05" value="0.2">
+                </div>
+                <div class="form-group text-left">
+                    <label for="kD">kDiffus</label>
+                    <input class="form-control-range" id="kD" type="range" min="0.0" max="1.0" step="0.05" value="0.7">
+                </div>
+                <div class="form-group text-left">
+                    <label for="kS">kSpecular</label>
+                    <input class="form-control-range" id="kS" type="range" min="0.0" max="1.0" step="0.05" value="0.7">
+                </div>
+                <div class="form-group text-left">
+                    <label for="shininess">Shininess</label>
+                    <input class="form-control-range" id="shininess" type="range" min="1" max="50" value="16">
+                </div>
+            </div>
+            <br>
+            <div>
+                <label for="downloadSceneButton">Aktuelle Szene herunterladen:</label>
+                <br>
+                <input class="btn btn-primary" id="downloadSceneButton" type="button" value="Szene herunterladen">
+                <br>
+                <br>
+                <label for="importSceneButton">Szene laden:</label>
+                <br>
+                <input class="btn btn-primary" id="importSceneButton" type="file">
+                <div style="margin: 5px">oder</div>
+                <input class="btn btn-primary" id="sampleSceneButton" type="button" value="Beispiel-Szene importieren"
+                       src="sample_scene.json">
+                <br>
+                <br>
+                <label for="bunnyObjButton">Obj.-Datei laden:</label>
+                <br>
+                <input class="btn btn-primary" id="bunnyObjButton" type="button" value="Stanford-Bunny laden">
+                &nbsp;<input class="btn btn-primary" id="armadilloObjButton" type="button" value="Stanford-Armadillo laden">
+                &nbsp;<input class="btn btn-primary" id="tyraObjButton" type="button" value="T-Rex laden">
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
 </html>

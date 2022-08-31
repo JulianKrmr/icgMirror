@@ -19,6 +19,7 @@ import phongFragmentShader from './phong-fragment-shader.glsl';
 import textureVertexShader from './texture-vertex-perspective-shader.glsl';
 import textureFragmentShader from './texture-fragment-shader.glsl';
 import { Rotation, Translation } from './transformation';
+import {FirstTraversalVisitorRaster} from "./firstTraversalVisitorRaster";
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById("rasteriser") as HTMLCanvasElement;
@@ -42,7 +43,7 @@ window.addEventListener('load', () => {
     sg.add(gn2);
     const gn3 = new GroupNode(new Translation(new Vector(0, 0, 0, 0)));
     gn2.add(gn3);
-    const cube = new TextureBoxNode('hci-logo.png');
+    const cube = new TextureBoxNode('hci-logo.png', 'brickwall_normal.jpg');
     gn3.add(cube);
 
     // setup for rendering
@@ -67,11 +68,19 @@ window.addEventListener('load', () => {
         textureVertexShader,
         textureFragmentShader
     );
+
+    const phongValues = {
+        shininess: 16.0,
+        kA: 0.3,
+        kD: 0.6,
+        kS: 0.7
+    }
+
     const visitor = new RasterVisitor(gl, phongShader, textureShader, setupVisitor.objects);
 
     let animationNodes = [
-        new RotationNode(sg, new Vector(0, 0, 1, 0)),
-        new RotationNode(gn3, new Vector(0, 1, 0, 0))
+        new RotationNode(sg, new Vector(0, 0, 1, 0), 10),
+        new RotationNode(gn3, new Vector(0, 1, 0, 0),10)
     ];
 
     function simulate(deltaT: number) {
@@ -84,7 +93,7 @@ window.addEventListener('load', () => {
 
     function animate(timestamp: number) {
         simulate(timestamp - lastTimestamp);
-        visitor.render(sg, camera, []);
+        visitor.render(sg, camera, [], phongValues, null);
         lastTimestamp = timestamp;
         window.requestAnimationFrame(animate);
     }

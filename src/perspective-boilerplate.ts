@@ -14,6 +14,7 @@ import Shader from './shader';
 import perspectiveVertexShader from './perspective-vertex-shader.glsl';
 import fragmentShader from './basic-fragment-shader.glsl'
 import { Scaling, Translation } from './transformation';
+import {FirstTraversalVisitorRaster} from "./firstTraversalVisitorRaster";
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById("rasteriser") as HTMLCanvasElement;
@@ -27,7 +28,7 @@ window.addEventListener('load', () => {
     gn1.add(sphere);
     let gn2 = new GroupNode(new Translation(new Vector(-.7, -0.4, .1, 0)));
     sg.add(gn2);
-    const cube = new AABoxNode(new Vector(1, 0, 0, 1));
+    const cube = new AABoxNode(new Vector(1, 0, 0, 1), new Vector(0.7, 0.7, 0.2, 1.0), true);
     gn2.add(cube);
 
     // setup for rendering
@@ -47,6 +48,14 @@ window.addEventListener('load', () => {
         perspectiveVertexShader,
         fragmentShader
     );
+
+    const phongValues = {
+        shininess: 16.0,
+        kA: 0.3,
+        kD: 0.6,
+        kS: 0.7
+    }
+
     const visitor = new RasterVisitor(gl, shader, null, setupVisitor.objects);
 
     function animate(timestamp: number) {
@@ -56,7 +65,7 @@ window.addEventListener('load', () => {
             Math.sin(timestamp / 1000),
             1
         );
-        visitor.render(sg, camera, []);
+        visitor.render(sg, camera, [], phongValues, null);
         window.requestAnimationFrame(animate);
     }
 
