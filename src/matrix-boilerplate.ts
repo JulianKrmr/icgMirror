@@ -22,10 +22,10 @@ window.addEventListener('load', () => {
         toWorld: Matrix.identity()
     }
     const phongValues = {
-        shininess: 32.0,
-        kA: 0.5,
-        kD: 0.9,
-        kS: 1.0
+        shininess: 10.0,
+        kA: 0.8,
+        kD: 0.5,
+        kS: 0.5
     }
 
     function setPixel(x: number, y: number, color: Vector) {
