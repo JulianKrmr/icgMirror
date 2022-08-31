@@ -32,6 +32,8 @@ export default class AABox {
     |/   |/
     0----1
      */
+
+    this.color = color;
     this.vertices = [
       new Vector(minPoint.x, minPoint.y, maxPoint.z, 1),
       new Vector(maxPoint.x, minPoint.y, maxPoint.z, 1),

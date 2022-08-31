@@ -11,8 +11,10 @@ import {
   SphereNode,
   AABoxNode,
   TextureBoxNode,
+  PyramidNode,
 } from "./nodes";
 import AABox from "./aabox";
+import Pyramid from "./pyramid";
 import { ChildProcess } from "child_process";
 
 const UNIT_SPHERE = new Sphere(
@@ -23,6 +25,13 @@ const UNIT_SPHERE = new Sphere(
 const UNIT_AABOX = new AABox(
   new Vector(-0.5, -0.5, -0.5, 1),
   new Vector(0.5, 0.5, 0.5, 1),
+  new Vector(0, 0, 0, 1)
+);
+const UNIT_PYRAMID = new Pyramid(
+  new Vector(-0.5, 0, -0.5, 1),
+  new Vector(0, 0, 0.5, 1),
+  new Vector(0.5, 0, 0.5, 1),
+  new Vector(0, 0, 0.5, 1),
   new Vector(0, 0, 0, 1)
 );
 
@@ -183,6 +192,37 @@ export default class RayVisitor implements Visitor {
       fromWorld.mulVec(this.ray.direction).normalize()
     );
     let intersection = UNIT_AABOX.intersect(ray);
+
+    if (intersection) {
+      const intersectionPointWorld = toWorld.mulVec(intersection.point);
+      const intersectionNormalWorld = toWorld
+        .mulVec(intersection.normal)
+        .normalize();
+      intersection = new Intersection(
+        (intersectionPointWorld.x - ray.origin.x) / ray.direction.x,
+        intersectionPointWorld,
+        intersectionNormalWorld
+      );
+      if (
+        this.intersection === null ||
+        intersection.closerThan(this.intersection)
+      ) {
+        this.intersection = intersection;
+        this.intersectionColor = node.color;
+      }
+    }
+  }
+
+  visitPyramidNode(node: PyramidNode): void {
+    const toWorld = this.transformations[this.transformations.length - 1];
+    const fromWorld =
+      this.inverseTransformations[this.inverseTransformations.length - 1];
+
+    const ray = new Ray(
+      fromWorld.mulVec(this.ray.origin),
+      fromWorld.mulVec(this.ray.direction).normalize()
+    );
+    let intersection = UNIT_PYRAMID.intersect(ray);
 
     if (intersection) {
       const intersectionPointWorld = toWorld.mulVec(intersection.point);

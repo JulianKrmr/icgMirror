@@ -1,7 +1,7 @@
 import "bootstrap";
 import "bootstrap/scss/bootstrap.scss";
 import Vector from "./vector";
-import { AABoxNode, GroupNode, SphereNode } from "./nodes";
+import { AABoxNode, GroupNode, PyramidNode, SphereNode } from "./nodes";
 import RayVisitor from "./rayvisitor";
 import { Rotation, Scaling, Translation } from "./transformation";
 
@@ -15,7 +15,7 @@ window.addEventListener("load", () => {
   sg.add(gn);
   const gn1 = new GroupNode(new Translation(new Vector(1.2, 0.5, 0, 0)));
   gn.add(gn1);
-  gn1.add(new AABoxNode(new Vector(0.4, 0, 0, 1)));
+  gn1.add(new PyramidNode(new Vector(0.4, 0, 0, 1)));
   const gn2 = new GroupNode(new Translation(new Vector(-0.8, 1, 1, 0)));
   gn.add(gn2);
   const gn3 = new GroupNode(new Scaling(new Vector(0.4, 0.4, 0.4, 0)));

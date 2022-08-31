@@ -97,6 +97,30 @@ export class AABoxNode extends Node {
 }
 
 /**
+ * Class representing an Axis Aligned Box in the Scenegraph
+ * @extends Node
+ */
+export class PyramidNode extends Node {
+  /**
+   * Creates an axis aligned box.
+   * The box's center is located at the origin
+   * with all edges of length 1
+   * @param color The colour of the cube
+   */
+  constructor(public color: Vector) {
+    super();
+  }
+
+  /**
+   * Accepts a visitor according to the visitor pattern
+   * @param  {Visitor} visitor - The visitor
+   */
+  accept(visitor: Visitor) {
+    visitor.visitPyramidNode(this);
+  }
+}
+
+/**
  * Class representing a Textured Axis Aligned Box in the Scenegraph
  * @extends Node
  */

@@ -10,6 +10,7 @@ import {
   SphereNode,
   AABoxNode,
   TextureBoxNode,
+  PyramidNode,
 } from "./nodes";
 import Shader from "./shader";
 
@@ -132,7 +133,8 @@ export class RasterVisitor implements Visitor {
     const shader = this.shader;
     shader.use();
     const toWorld = this.transformations[this.transformations.length - 1];
-    const fromWorld = this.inverseTransformations[this.inverseTransformations.length - 1];
+    const fromWorld =
+      this.inverseTransformations[this.inverseTransformations.length - 1];
 
     shader.getUniformMatrix("M").set(toWorld);
     shader.getUniformMatrix("M_inverse").set(fromWorld);
@@ -165,6 +167,23 @@ export class RasterVisitor implements Visitor {
    * @param  {AABoxNode} node - The node to visit
    */
   visitAABoxNode(node: AABoxNode) {
+    this.shader.use();
+    let shader = this.shader;
+    const toWorld = this.transformations[this.transformations.length - 1];
+    shader.getUniformMatrix("M").set(toWorld);
+    let V = shader.getUniformMatrix("V");
+    if (V && this.lookat) {
+      V.set(this.lookat);
+    }
+    let P = shader.getUniformMatrix("P");
+    if (P && this.perspective) {
+      P.set(this.perspective);
+    }
+
+    this.renderables.get(node).render(shader);
+  }
+
+  visitPyramidNode(node: PyramidNode) {
     this.shader.use();
     let shader = this.shader;
     const toWorld = this.transformations[this.transformations.length - 1];
@@ -265,6 +284,18 @@ export class RasterSetupVisitor {
    * @param  {AABoxNode} node - The node to visit
    */
   visitAABoxNode(node: AABoxNode) {
+    this.objects.set(
+      node,
+      new RasterBox(
+        this.gl,
+        new Vector(-0.5, -0.5, -0.5, 1),
+        new Vector(0.5, 0.5, 0.5, 1)
+      )
+    );
+  }
+
+  //Erzeugt zur Zeit noch eine Raster BOX!!!!!!!
+  visitPyramidNode(node: AABoxNode) {
     this.objects.set(
       node,
       new RasterBox(
